@@ -9,16 +9,6 @@ require_once "functions.php";
 
 
 while (true) {
-    echo "Please provide your API key.\n";
-    $apiKey = readline("Key - ");
-    if ($apiKey === "") {
-        echo "API key cannot be empty.\n";
-        continue;
-    }
-    break;
-}
-
-while (true) {
     $email = readline("Enter email to check: ");
     if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
         echo "Input must be a valid email.\n";
@@ -27,6 +17,13 @@ while (true) {
     break;
 }
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
+
+$apiKey = $_ENV['API_KEY'];
+if ($_ENV["API_KEY"] === null) {
+    exit("Missing API key in environment.\n");
+}
 
 $url = "https://api.emailvalidation.io/v1/info?apikey=$apiKey&email=" . urlencode($email);
 
@@ -62,24 +59,23 @@ if (strtolower(readline("Send test email? (y/n) ")) != "y") {
     exit();
 }
 
-if (!file_exists("loginInfo.json")) {
-    echo "Missing loginInfo.json with username and password!\n";
-}
-$loginData = json_decode(file_get_contents("loginInfo.json"));
 
 $mail = new PHPMailer(true);
+if ($_ENV["USERNAME"] === null || $_ENV["PASSWORD"] === null) {
+    exit("Missing username or password in environment.\n");
+}
 
 try {
     $mail->SMTPDebug = SMTP::DEBUG_SERVER;
     $mail->isSMTP();
     $mail->Host = 'mail.inbox.lv';
     $mail->SMTPAuth = true;
-    $mail->Username = $loginData->username;
-    $mail->Password = $loginData->password;
+    $mail->Username = $_ENV["USERNAME"];
+    $mail->Password = $_ENV["PASSWORD"];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->Port = 465;
 
-    $mail->setFrom($loginData->username, 'Mailer');
+    $mail->setFrom($_ENV["USERNAME"], 'Mailer');
     $mail->addAddress($email);
 
     $mail->Subject = 'Hello World!';
