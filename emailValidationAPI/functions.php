@@ -1,6 +1,6 @@
 <?php
 
-function executeCurl($handle)
+function executeCurl($handle): string
 {
     $response = curl_exec($handle);
     if (curl_errno($handle)) {
@@ -11,7 +11,7 @@ function executeCurl($handle)
     return $response;
 }
 
-function decodeJson($data)
+function decodeJson(string $data): string
 {
     $response = json_decode($data);
     if (json_last_error() !== JSON_ERROR_NONE) {
