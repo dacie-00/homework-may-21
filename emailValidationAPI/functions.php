@@ -11,7 +11,7 @@ function executeCurl($handle): string
     return $response;
 }
 
-function decodeJson(string $data): string
+function decodeJson(string $data)
 {
     $response = json_decode($data);
     if (json_last_error() !== JSON_ERROR_NONE) {
