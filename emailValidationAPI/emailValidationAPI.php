@@ -8,6 +8,9 @@ require_once 'vendor/autoload.php';
 require_once "functions.php";
 
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
+
 while (true) {
     $email = readline("Enter email to check: ");
     if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
@@ -16,9 +19,6 @@ while (true) {
     }
     break;
 }
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->safeLoad();
 
 $apiKey = $_ENV['API_KEY'];
 if ($_ENV["API_KEY"] === null) {
@@ -59,12 +59,11 @@ if (strtolower(readline("Send test email? (y/n) ")) != "y") {
     exit();
 }
 
-
-$mail = new PHPMailer(true);
 if ($_ENV["USERNAME"] === null || $_ENV["PASSWORD"] === null) {
     exit("Missing username or password in environment.\n");
 }
 
+$mail = new PHPMailer(true);
 try {
     $mail->SMTPDebug = SMTP::DEBUG_SERVER;
     $mail->isSMTP();
