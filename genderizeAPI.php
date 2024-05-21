@@ -24,6 +24,7 @@ curl_setopt_array($curlHandle, [
 ]);
 
 $response = executeCurl($curlHandle);
+curl_close($curlHandle);
 $response = decodeJson($response);
 
 if (isset($response->error)) {

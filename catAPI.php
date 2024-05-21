@@ -11,6 +11,7 @@ curl_setopt_array($curlHandle, [
 ]);
 
 $response = executeCurl($curlHandle);
+curl_close($curlHandle);
 $fact = decodeJson($response);
 
 $verified = $fact->status->verified != Null ? "verified" : "not verified";

@@ -8,7 +8,6 @@ function executeCurl($handle)
         curl_close($handle);
         exit;
     }
-    curl_close($handle);
     return $response;
 }
 
